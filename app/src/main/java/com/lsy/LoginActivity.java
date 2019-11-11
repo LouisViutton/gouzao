@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.dl)
     void dl(){
+
         final String username=et_username.getText().toString();
         final String pwd=et_pwd.getText().toString();
 
@@ -51,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 OkHttpClient httpClient = new OkHttpClient.Builder().readTimeout(1, TimeUnit.SECONDS).build();
 
-                String url="http://10.10.16.65:8089/MobileShop/member/login2";
+                String url="http://172.20.10.13:8080/MobileShop/member/login2";
 
                 FormBody body = new FormBody.Builder()
                         .add("input", username)
@@ -73,6 +75,30 @@ public class LoginActivity extends AppCompatActivity {
                         String json=response.body().string();
 
                         Gson gson=new Gson();
+                        final LoginResponse loginResponse = gson.fromJson(json, LoginResponse.class);
+
+                        //处理登录逻辑
+                        if(loginResponse.getStatus()==0){
+
+                            SpTools.putBooleam("isLogin",true);
+                            //成功
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            finish();
+                        }else {
+                            //失败
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this,loginResponse.getMsg(),Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
                     }
                 });
             }
