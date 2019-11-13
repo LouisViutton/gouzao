@@ -2,38 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f3f2f6">
 
-    <LinearLayout
-        android:gravity="center"
+    <RelativeLayout
         android:background="#ffffff"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@mipmap/common_title_back_normal"
+            android:layout_width="50dp"
+            android:padding="15dp"
+            android:layout_height="match_parent" />
+
         <TextView
+            android:layout_centerInParent="true"
             android:text="注册"
             android:textColor="#252525"
             android:textSize="17sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
+        android:gravity="center"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:background="#ffffff"
         android:layout_height="50dp">
 
         <TextView
             android:text="账号："
             android:textSize="15sp"
             android:textColor="#686868"
-            android:layout_width="wrap_content"
+            android:gravity="right"
+            android:layout_width="90dp"
             android:layout_height="wrap_content" />
 
         <EditText
@@ -48,15 +55,18 @@
     </LinearLayout>
 
     <LinearLayout
+        android:gravity="center"
         android:layout_marginTop="1dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
             android:textSize="15sp"
             android:textColor="#686868"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
+            android:gravity="right"
             android:layout_height="wrap_content"
             android:text="邮箱：" />
 
@@ -73,16 +83,18 @@
 
     <LinearLayout
         android:gravity="center"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:background="#ffffff"
         android:layout_height="50dp">
 
         <TextView
             android:textSize="15sp"
             android:textColor="#686868"
             android:text="密码："
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
+            android:gravity="right"
             android:layout_height="wrap_content" />
 
         <EditText
@@ -103,12 +115,14 @@
         android:layout_marginTop="1dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <TextView
             android:textSize="15sp"
             android:textColor="#686868"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
+            android:gravity="right"
             android:layout_height="wrap_content"
             android:text="确认密码：" />
 
@@ -133,6 +147,7 @@
         android:id="@+id/dl"
         android:textSize="17sp"
         android:textColor="#ffffff"
+        android:gravity="center"
         android:text="注册"
         android:layout_width="match_parent"
         android:layout_height="42dp" />
