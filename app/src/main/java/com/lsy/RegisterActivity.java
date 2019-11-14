@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -26,10 +29,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     @BindView(R.id.et_username)
     EditText et_username;
+    @BindView(R.id.et_email)
+    EditText et_email;
     @BindView(R.id.et_pwd)
     EditText et_pwd;
-    @BindView(R.id.et_emil)
-    EditText et_emil;
+    @BindView(R.id.et_pwds)
+    EditText et_pwds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,70 +44,70 @@ public class RegisterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    Handler handler=new Handler();
+    @OnClick(R.id.iv_cart)
+    void back(){
+        finish();
+    }
 
-    @OnClick(R.id.dl)
-    void dl(){
+    @OnClick({R.id.bt_register})
+    void register(){
 
-        final String username=et_username.getText().toString();
-        final String pwd=et_pwd.getText().toString();
+        String username = et_username.getText().toString();
+        if (TextUtils.isEmpty(username)){
+            Toast.makeText(this,"请输入用户名",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+        String email = et_email.getText().toString();
+        if (TextUtils.isEmpty(email)){
+            Toast.makeText(this,"请输入邮箱",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                OkHttpClient httpClient = new OkHttpClient.Builder().readTimeout(1, TimeUnit.SECONDS).build();
+        String pwd = et_pwd.getText().toString();
+        if (TextUtils.isEmpty(pwd)) {
+            Toast.makeText(this, "请输入密码", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                String url="http://10.10.16.37:8088/MobileShop/member/login2";
+        String pwds = et_pwds.getText().toString();
+        if (TextUtils.isEmpty(pwds)) {
+            Toast.makeText(this, "请输入确认密码", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                FormBody body = new FormBody.Builder()
-                        .add("input", username)
-                        .add("password", pwd)
-                        .build();
-                Request request = new Request.Builder()
-                        .url(url)
-                        .post(body)
-                        .build();
-
-                httpClient.newCall(request).enqueue(new Callback() {
+        if (!pwd.equals(pwds)){
+            Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        OkHttpUtils
+                .post()
+                .url("http://192.168.43.188:8080/MobileShop/member")
+                .addParams("uname",username)
+                .addParams("password",pwd)
+                .addParams("email",email)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
-
+                    public void onError(Call call, Exception e, int id) {
+                        Toast.makeText(RegisterActivity.this,"注册失败"+e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String json=response.body().string();
+                    public void onResponse(String response, int id) {
 
-                        Gson gson=new Gson();
-                        final LoginResponse loginResponse = gson.fromJson(json, LoginResponse.class);
+                        Gson gson = new Gson();
+                        LoginResponse2 loginResponse2 = gson.fromJson(response, LoginResponse2.class);
 
-                        //处理登录逻辑
-                        if(loginResponse.getStatus()==0){
-
-                            SpTools.putBooleam("isLogin",true);
-                            //成功
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        if (loginResponse2!=null&&loginResponse2.getStatus()==0){
+                            Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
                             finish();
                         }else {
-                            //失败
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(RegisterActivity.this,loginResponse.getMsg(),Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            Toast.makeText(RegisterActivity.this,"注册失败"+loginResponse2.getMsg(),Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
-            }
-        }.start();
+
+
     }
 }

@@ -1,5 +1,6 @@
 package com.lsy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -30,12 +33,19 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.et_pwd)
     EditText et_pwd;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.tv_register)
+    void register(){
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     Handler handler=new Handler();
@@ -46,62 +56,34 @@ public class LoginActivity extends AppCompatActivity {
         final String username=et_username.getText().toString();
         final String pwd=et_pwd.getText().toString();
 
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+        String url="http://192.168.43.188:8080/MobileShop/member/login2";
 
-                OkHttpClient httpClient = new OkHttpClient.Builder().readTimeout(1, TimeUnit.SECONDS).build();
-
-                String url="http://10.10.16.37:8088/MobileShop/member/login2";
-
-                FormBody body = new FormBody.Builder()
-                        .add("input", username)
-                        .add("password", pwd)
-                        .build();
-                Request request = new Request.Builder()
-                        .url(url)
-                        .post(body)
-                        .build();
-
-                httpClient.newCall(request).enqueue(new Callback() {
+        OkHttpUtils
+                .post()
+                .url(url)
+                .addParams("input", username)
+                .addParams("password", pwd)
+                .build()
+                .execute(new StringCallback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onError(Call call, Exception e, int id) {
 
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String json=response.body().string();
-
-                        Gson gson=new Gson();
-                        final LoginResponse loginResponse = gson.fromJson(json, LoginResponse.class);
-
-                        //处理登录逻辑
-                        if(loginResponse.getStatus()==0){
-
-                            SpTools.putBooleam("isLogin",true);
-                            //成功
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    public void onResponse(String response, int id) {
+                        //Json 主线程
+                        Gson gson = new Gson();
+                        LoginResponse2 response2 = gson.fromJson(response, LoginResponse2.class);
+                        if (response2.getStatus()==0){
+                            Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+                            SpTools.putBooleam("islogin",true);
                             finish();
                         }else {
-                            //失败
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(LoginActivity.this,loginResponse.getMsg(),Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            Toast.makeText(LoginActivity.this,"登录失败"+response2.getMsg(),Toast.LENGTH_SHORT).show();
                         }
 
                     }
                 });
-            }
-        }.start();
     }
 }
