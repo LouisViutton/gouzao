@@ -44,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.iv_cart)
+    @OnClick(R.id.iv_back)
     void back(){
         finish();
     }

@@ -12,6 +12,7 @@
         android:layout_height="50dp">
 
         <ImageView
+            android:id="@+id/iv_back2"
             android:src="@mipmap/common_title_back_normal"
             android:layout_width="50dp"
             android:padding="15dp"

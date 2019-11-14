@@ -47,8 +47,12 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
+    @OnClick(R.id.iv_back2)
+    void back2(){
+        finish();
+    }
 
-    Handler handler=new Handler();
+    //Handler handler=new Handler();
 
     @OnClick(R.id.dl)
     void dl(){

@@ -50,7 +50,7 @@ public class PersonalFragment extends Fragment {
             SpTools.putBooleam("isLogin",false);
         }else {
             //跳转到登录界面
-            Intent intent = new Intent(getActivity(), RegisterActivity.class);
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
         }
     }
