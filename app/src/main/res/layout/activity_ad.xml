@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:src="@mipmap/ad3"
+        android:id="@+id/tv_ad"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -14,7 +14,7 @@
         android:id="@+id/tv_count"
         android:text="点击跳转 5"
         android:padding="2dp"
-        android:background="#99000000"
+        android:background="#ff9900"
         android:layout_marginTop="25dp"
         android:layout_marginRight="25dp"
         android:layout_alignParentRight="true"
